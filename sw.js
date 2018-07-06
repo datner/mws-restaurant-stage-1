@@ -1,79 +1,77 @@
-var CACHE = 'restaurant-cache';
+const CACHE = 'restaurant-cache';
 
-self.addEventListener('install', function(event) {
-	console.log('installing SW');
+self.addEventListener('install', function (event) {
+    console.log('installing SW');
 
-	event.waitUntil(precache());
+    event.waitUntil(precache());
 
-	console.log('finished installing SW');
+    console.log('finished installing SW');
 
 });
 
-self.addEventListener('fetch', function(event) {
-	//console.log('SW serving asset');
-	const URL = event.request.url
-	console.log(event.request.url);
+self.addEventListener('fetch', function (event) {
+    console.log('SW serving asset');
+    const URL = event.request.url;
 
-if (URL.startsWith('http://localhost')) {
-		event.respondWith(fromCache(event.request)
-		.catch(function() {
-			console.log(`serving ${URL} from cache `);
-
-			return fromNetwork(event.request)
-		}));
-	} else {
-		event.respondWith(fromNetwork(event.request));
-	}
+    event.respondWith(fromNetwork(event.request, 400).catch(function() {
+        return fromCache(event.request)
+    }));
 });
 
 function precache() {
-	return caches.open(CACHE).then(function(cache) {
-		return cache.addAll([
-			'/css/styles.css',
-			'/data/restaurants.json',
-			'/js/dbhelper.js',
-			'/js/main.js',
-			'/js/restaurant_info.js',
-			'/index.html',
-			'/restaurant.html',
-			'/img/1.jpg',
-			'/img/2.jpg',
-			'/img/3.jpg',
-			'/img/4.jpg',
-			'/img/5.jpg',
-			'/img/6.jpg',
-			'/img/7.jpg',
-			'/img/8.jpg',
-			'/img/9.jpg',
-			'/img/10.jpg'
-		]);
-	});
+    return caches.open(CACHE).then(function (cache) {
+        return cache.addAll([
+            '/css/styles.css',
+            '/js/dbhelper.js',
+            '/js/main.js',
+            '/js/restaurant_info.js',
+            '/index.html',
+            '/restaurant.html',
+            '/img/1.jpg',
+            '/img/2.jpg',
+            '/img/3.jpg',
+            '/img/4.jpg',
+            '/img/5.jpg',
+            '/img/6.jpg',
+            '/img/7.jpg',
+            '/img/8.jpg',
+            '/img/9.jpg',
+            '/img/10.jpg'
+        ]);
+    });
 }
 
 function fromCache(request) {
-	//console.log('loading from cache');
+    //console.log('loading from cache');
+    const hasQuery = request.url.indexOf('?') !== -1;
 
-	return caches.open(CACHE).then(function (cache) {
-		return cache.match(request).then(function(matching) {
-			return matching || Promise.reject('no-match');
-		});
-	});
+    return caches.open(CACHE).then(function (cache) {
+        return cache.match(request, {ignoreSearch: hasQuery}).then(function (matching) {
+            console.log('serving from cache');
+            return matching || Promise.reject('no-match');
+        });
+    });
 }
 
-function fromNetwork(request) {
-	//console.log('loading from network');
+function fromNetwork(request, timeout) {
 
-	return new Promise(function(fulfill, reject) {
-		fetch(request).then(function(response) {
-			fulfill(response);
-		}, reject);
-	});
+
+    return new Promise((fulfill, reject) => {
+        fetch(request).then(function (response) {
+
+            const timeoutId = setTimeout(reject, timeout);
+            const clone = response.clone();
+            fetch(request).then(response => {
+                clearTimeout(timeoutId);
+                update(request, clone);
+                fulfill(response);
+            });
+        }, reject);
+    });
 }
 
 function update(request, response) {
-	//console.log('updating');
-
-	return caches.open(CACHE).then(function(cache)  {
-		return cache.put(request, response);
-	});
+    return caches.open(CACHE).then(function (cache) {
+        return cache.put(request, response);
+    });
 }
