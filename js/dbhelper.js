@@ -1,7 +1,7 @@
 /**
  * Common database helper functions.
  */
-class DBHelper {
+class DBHelper { 
 
   /**
    * Database URL.
@@ -17,18 +17,30 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-        const restaurants = JSON.parse(xhr.responseText);
-        callback(null, restaurants);
-      } else { // Oops!. Got an error from server.
-        const error = (`Request failed. Returned status of ${xhr.status}`);
-        callback(error, null);
+    const idb = idbKeyval;
+    idb.keys()
+       .then( keys => {
+        if (keys.includes('restaurants')) {
+          console.log('fetching restaurants')
+          idb.get('restaurants')
+             .then(restaurants => callback(null,restaurants))
+        } else {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', DBHelper.DATABASE_URL);
+        xhr.onload = () => {
+          if (xhr.status === 200) { // Got a success response from server!
+            const restaurants = JSON.parse(xhr.responseText);
+            idb.set('restaurants', restaurants)
+               .then(() => console.log('restaurants logged'))
+            callback(null, restaurants);
+          } else { // Oops!. Got an error from server.
+            const error = (`Request failed. Returned status of ${xhr.status}`);
+            callback(error, null);
+          }
+        }
+        xhr.send();
       }
-    };
-    xhr.send();
+    });
   }
 
   /**
@@ -165,6 +177,6 @@ class DBHelper {
       animation: google.maps.Animation.DROP}
     );
     return marker;
-  }
-
+  } 
 }
+

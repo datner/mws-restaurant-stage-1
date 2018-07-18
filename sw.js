@@ -23,12 +23,12 @@ self.addEventListener('activate', function (event) {
 });
 
 self.addEventListener('fetch', function (event) {
-    console.log('SW serving asset');
-    const URL = event.request.url;
 
-    event.respondWith(fromNetwork(event.request, 400).catch(function() {
-        return fromCache(event.request)
-    }));
+ if(event.request.method === 'GET'){
+        event.respondWith(fromNetwork(event.request, 400).catch(function() {
+            return fromCache(event.request)
+        }));
+    }
 });
 
 function precache() {
@@ -37,19 +37,9 @@ function precache() {
             '/css/styles.css',
             '/js/dbhelper.js',
             '/js/main.js',
-            '/js/restaurant_info.js',
             '/index.html',
             '/restaurant.html',
-            '/img/1.jpg',
-            '/img/2.jpg',
-            '/img/3.jpg',
-            '/img/4.jpg',
-            '/img/5.jpg',
-            '/img/6.jpg',
-            '/img/7.jpg',
-            '/img/8.jpg',
-            '/img/9.jpg',
-            '/img/10.jpg'
+            '/404.html'
         ]);
     });
 }
@@ -67,24 +57,16 @@ function fromCache(request) {
 }
 
 function fromNetwork(request, timeout) {
-
-
     return new Promise((fulfill, reject) => {
-        fetch(request).then(function (response) {
-
-            const timeoutId = setTimeout(reject, timeout);
-            const clone = response.clone();
-            fetch(request).then(response => {
-                clearTimeout(timeoutId);
-                update(request, clone);
-                fulfill(response);
-            });
+        const timeoutId = setTimeout(reject, timeout);
+        fetch(request).then(response => {
+            clearTimeout(timeoutId);
+            update(request, response.clone());
+            fulfill(response);
         }, reject);
     });
 }
 
 function update(request, response) {
-    return caches.open(CACHE).then(function (cache) {
-        return cache.put(request, response);
-    });
+    return caches.open(CACHE).then(cache => cache.put(request, response))
 }
