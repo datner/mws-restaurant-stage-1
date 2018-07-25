@@ -1,13 +1,12 @@
 @charset "utf-8";
 @import '_variables.scss';
-@import 'compass';
 /* CSS Document */
 
 body {
-  background-color: #f58500;
+  background-color: #fED8B1;
 	margin: 0;
 	position:relative;
-  td, th, p, {
+  td, th, p {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 10pt;
     color: #333;
@@ -27,7 +26,7 @@ a {
     text-decoration: none;
    }
    img{
-     border: none 0px #fff;
+     border: none 0 #fff;
    }
 
 }
@@ -151,7 +150,7 @@ nav {
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
   width: 100%;
-  background-color: #3397DB;
+  background-color: darkblue;
   align-items: center;
   text-align: center;
 
@@ -209,7 +208,7 @@ nav {
     position: relative;
 
     h1 {
-      color: #f18200;
+      color: orangered;
       font-family: Arial,sans-serif;
       font-size: 14pt;
       font-weight: 200;
@@ -220,7 +219,7 @@ nav {
     }
 
     a {
-      background-color: orange;
+      background-color: orangered;
       border-bottom: 3px solid #eee;
       color: #fff;
       display: inline-block;
@@ -271,7 +270,7 @@ nav {
   }
 }
 #restaurant-name {
-  color: #f18200;
+  color: #fED8B1;
   font-family: Arial,sans-serif;
   font-size: 20pt;
   font-weight: 200;
@@ -319,7 +318,7 @@ nav {
   @media screen and (min-width: $tablet) {
     margin-top: 0;
   }
-  @media screen and (max-width: calc($tablet - 1px )) {
+  @media screen and (max-width: $tablet - 1px ) {
     -webkit-box-shadow: 0px 0px 17px 10px rgba(0,0,0,0.25);
     -moz-box-shadow: 0px 0px 17px 10px rgba(0,0,0,0.25);
     box-shadow: 0px 0px 17px 10px rgba(0,0,0,0.25);
@@ -334,13 +333,14 @@ nav {
     width: calc(50% - 80px);
   }
   h2 {
-    color: #f58500;
+    color: #fED8B1;
     font-size: 24pt;
     font-weight: 300;
     letter-spacing: -1px;
     padding-bottom: 1pt;
   }
 }
+
 #reviews-list {
   margin: 0;
   padding: 0;
@@ -358,8 +358,6 @@ nav {
 
     background-color: rgba(51,51,51,1);
     background-color: rgba(51,51,51,1);
-   @include filter-gradient(#333333, #333333, vertical);
-   @include background-image(linear-gradient(top, rgba(51,51,51,1) 0%, rgba(51,51,51,1) 60px, rgba(255,255,255,1) 60px, rgba(255,255,255,1) 100%));      margin: 0 0 10px;
 
    .review-name {
     line-height: 20px;
@@ -378,7 +376,7 @@ nav {
    .review-rating {
     margin-top: 30px;
     & > span {
-      background-color: #f58500;
+      background-color: #fED8B1;
       color: #fff;
       letter-spacing: 0.1rem;
       padding: 5px 10px;

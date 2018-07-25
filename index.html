@@ -1,11 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta name="viewport" content="width=device-width" />
+  <meta name="theme-color" content="#f18200"/>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
-  
+  <style>
+    /* line 6, ../scss/styles.scss */
+    body {
+      background-color: #fED8B1;
+      margin: 0;
+      position: relative;
+    }
+    /* line 10, ../scss/styles.scss */
+    body td, body th, body p {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10pt;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    /* line 17, ../scss/styles.scss */
+    ul, li {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10pt;
+      color: #333;
+    }
+  </style>
   <title>Restaurant Reviews</title>
 </head>
 
@@ -18,7 +40,7 @@
 
   <main id="maincontent" role="main">
     <section id="map-container">
-      <div aria-role="application" id="map"></div>
+      <div role="application" id="map"></div>
     </section>
     <section>
       <div class="filter-options">
